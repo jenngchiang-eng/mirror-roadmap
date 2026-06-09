@@ -43,35 +43,43 @@
   .ph2{border-color:var(--p2);background:var(--p2b)} .ph2 .tag,.ph2 .when{color:var(--p2)}
   .ph3{border-color:var(--p3);background:var(--p3b)} .ph3 .tag,.ph3 .when{color:var(--p3)}
 
-  /* gantt */
+  /* gantt — 左侧固定标签列 + 右侧时间轴，互不重叠 */
   .gantt{border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .months{display:flex;background:#fbfcfe;border-bottom:1px solid var(--line)}
-  .mo{padding:9px 0;text-align:center;font-size:12.5px;font-weight:700;
+  .ghead{display:flex;background:#fbfcfe;border-bottom:1px solid var(--line)}
+  .gutter{flex:0 0 196px;width:196px;border-right:1px solid var(--line)}
+  .months{flex:1;display:flex}
+  .mo{flex-shrink:0;padding:9px 0;text-align:center;font-size:12.5px;font-weight:700;
       border-right:1px dashed var(--line);color:var(--sub)}
   .mo:last-child{border-right:none}
 
-  .rows{position:relative}
-  /* vertical milestone guide lines overlay */
-  .guides{position:absolute;inset:0;pointer-events:none;z-index:3}
-  .guide{position:absolute;top:0;bottom:0;width:0;border-left:2px dotted var(--gold);opacity:.55}
+  .gbody{display:flex}
+  .glabels{flex:0 0 196px;width:196px;border-right:1px solid var(--line);
+           display:flex;flex-direction:column}
+  .lcell{height:46px;display:flex;align-items:center;padding:0 14px;
+         font-size:12.5px;font-weight:600;border-bottom:1px solid var(--line)}
+  .lcell:last-child{border-bottom:none}
+  .lcell small{font-weight:500;opacity:.65;margin-left:5px;font-size:10px}
 
-  .row{position:relative;height:46px;border-bottom:1px solid var(--line);
-       display:flex;align-items:center}
-  .row:last-child{border-bottom:none}
-  .row .lbl{position:absolute;left:14px;font-size:12.5px;font-weight:600;z-index:2;
-            text-shadow:0 0 6px #fff,0 0 6px #fff}
-  .track{position:absolute;left:0;right:0;height:100%}
+  .track{flex:1;position:relative}
+  /* vertical milestone guide lines overlay */
+  .guides{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .guide{position:absolute;top:0;bottom:0;width:0;border-left:2px dotted var(--gold);opacity:.55}
+  .brow{position:relative;height:46px;border-bottom:1px solid var(--line)}
+  .brow:last-child{border-bottom:none}
+  .brow.alt{background:#faf8ff}
   .bar{position:absolute;top:9px;height:28px;border-radius:7px;display:flex;
        align-items:center;padding:0 10px;font-size:11.5px;color:#fff;font-weight:600;
-       white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.10)}
+       white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.10);z-index:1}
   .bar.dash{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 7px,transparent 7px 14px)}
   .bar .out{position:absolute;left:calc(100% + 8px);color:var(--ink);
-            font-weight:600;text-shadow:0 0 6px #fff}
+            font-weight:600;text-shadow:0 0 5px #fff,0 0 5px #fff}
   .b-p2{background:var(--p2)} .b-pay{background:var(--pay)} .b-test{background:var(--test);color:#5a4500}
   .b-p3{background:var(--p3)} .b-gtm{background:var(--gtm)} .b-p1{background:var(--p1)}
 
   /* milestone diamonds row */
-  .mstones{position:relative;height:54px;margin-top:2px}
+  .mstones-wrap{display:flex;margin-top:2px}
+  .gspacer{flex:0 0 196px;width:196px}
+  .mstones{flex:1;position:relative;height:54px}
   .ms{position:absolute;transform:translateX(-50%);text-align:center;width:140px}
   .ms .dia{width:15px;height:15px;background:var(--gold);margin:0 auto 5px;
            transform:rotate(45deg);box-shadow:0 0 0 4px #fff,0 2px 6px rgba(0,0,0,.2)}
@@ -133,79 +141,62 @@
   <!-- 甘特时间轴 -->
   <h2 class="sec">时间轴（甘特图）</h2>
   <div class="gantt">
-    <!-- 月份表头：6月20.0% / 7月27.0% / 8月27.0% / 9月26.0% -->
-    <div class="months">
-      <div class="mo" style="width:20.0%">6 月</div>
-      <div class="mo" style="width:27.0%">7 月</div>
-      <div class="mo" style="width:27.0%">8 月</div>
-      <div class="mo" style="width:26.0%">9 月</div>
+    <!-- 表头：左侧标签留白列 + 右侧月份(6月20.0%/7月27.0%/8月27.0%/9月26.0%) -->
+    <div class="ghead">
+      <div class="gutter"></div>
+      <div class="months">
+        <div class="mo" style="width:20.0%">6 月</div>
+        <div class="mo" style="width:27.0%">7 月</div>
+        <div class="mo" style="width:27.0%">8 月</div>
+        <div class="mo" style="width:26.0%">9 月</div>
+      </div>
     </div>
 
-    <div class="rows">
-      <!-- 里程碑竖向引导线：6/12=3.5% · 7/31=46.1% · 9/1=73.9% -->
-      <div class="guides">
-        <div class="guide" style="left:3.5%"></div>
-        <div class="guide" style="left:46.1%"></div>
-        <div class="guide" style="left:73.9%"></div>
+    <div class="gbody">
+      <!-- 左侧固定标签列 -->
+      <div class="glabels">
+        <div class="lcell" style="color:var(--p2)">② Match 匹配开发</div>
+        <div class="lcell">收费功能开发</div>
+        <div class="lcell">小规模用户测试</div>
+        <div class="lcell" style="color:var(--p3)">③ 申请平台开发</div>
+        <div class="lcell">线上市场推广</div>
+        <div class="lcell">27Fall 申请季</div>
+        <div class="lcell" style="color:var(--p1)">① Mirror 对话 2.0<small>并行·需实习生</small></div>
       </div>
 
-      <!-- 主线 -->
-      <div class="row">
-        <div class="lbl">② Match 匹配开发</div>
-        <div class="track">
-          <div class="bar b-p2" style="left:0;width:3.5%"><span class="out">本周收尾</span></div>
+      <!-- 右侧时间轴 -->
+      <div class="track">
+        <!-- 里程碑竖向引导线：6/12=3.5% · 7/31=46.1% · 9/1=73.9% -->
+        <div class="guides">
+          <div class="guide" style="left:3.5%"></div>
+          <div class="guide" style="left:46.1%"></div>
+          <div class="guide" style="left:73.9%"></div>
         </div>
-      </div>
-      <div class="row">
-        <div class="lbl">收费功能开发</div>
-        <div class="track">
-          <div class="bar b-pay" style="left:6.1%;width:3.5%"><span class="out">6/15–6/19</span></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="lbl">小规模用户测试</div>
-        <div class="track">
-          <div class="bar b-test" style="left:12.2%;width:15.6%">灰度试用 · 收反馈</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="lbl">③ 申请平台开发</div>
-        <div class="track">
-          <div class="bar b-p3" style="left:27.8%;width:18.3%">第三阶段开发</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="lbl">线上市场推广</div>
-        <div class="track">
-          <div class="bar b-gtm" style="left:47.0%;width:52.1%">投放 · 内容 · 获客</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="lbl">27Fall 申请季</div>
-        <div class="track">
-          <div class="bar b-gtm" style="left:73.9%;width:25.2%;opacity:.78">承接真实申请用户</div>
-        </div>
-      </div>
-      <!-- 并行条件线 -->
-      <div class="row" style="background:#faf8ff">
-        <div class="lbl" style="color:var(--p1)">① Mirror 对话 2.0 <span style="font-weight:500;opacity:.7">（并行 · 需实习生）</span></div>
-        <div class="track">
-          <div class="bar b-p1 dash" style="left:6.1%;width:40.0%">独立人力并行推进</div>
-        </div>
+
+        <div class="brow"><div class="bar b-p2" style="left:0;width:3.5%"><span class="out">本周收尾</span></div></div>
+        <div class="brow"><div class="bar b-pay" style="left:6.1%;width:3.5%"><span class="out">6/15–6/19</span></div></div>
+        <div class="brow"><div class="bar b-test" style="left:12.2%;width:15.6%">灰度试用 · 收反馈</div></div>
+        <div class="brow"><div class="bar b-p3" style="left:27.8%;width:18.3%">第三阶段开发</div></div>
+        <div class="brow"><div class="bar b-gtm" style="left:47.0%;width:52.1%">投放 · 内容 · 获客</div></div>
+        <div class="brow"><div class="bar b-gtm" style="left:73.9%;width:25.2%;opacity:.78">承接真实申请用户</div></div>
+        <div class="brow alt"><div class="bar b-p1 dash" style="left:6.1%;width:40.0%">独立人力并行推进</div></div>
       </div>
     </div>
   </div>
 
-  <!-- 里程碑 -->
-  <div class="mstones">
-    <div class="ms" style="left:3.5%">
-      <div class="dia"></div><div class="d">6/12 周五</div><div class="t">Match 完工</div>
-    </div>
-    <div class="ms" style="left:46.1%">
-      <div class="dia"></div><div class="d">7 月底</div><div class="t">完整项目上线</div>
-    </div>
-    <div class="ms" style="left:73.9%">
-      <div class="dia"></div><div class="d">9 月</div><div class="t">进入 27Fall 申请季</div>
+  <!-- 里程碑（与时间轴对齐，左侧留白同宽） -->
+  <div class="mstones-wrap">
+    <div class="gspacer"></div>
+    <div class="mstones">
+      <div class="ms" style="left:3.5%">
+        <div class="dia"></div><div class="d">6/12 周五</div><div class="t">Match 完工</div>
+      </div>
+      <div class="ms" style="left:46.1%">
+        <div class="dia"></div><div class="d">7 月底</div><div class="t">完整项目上线</div>
+      </div>
+      <div class="ms" style="left:73.9%">
+        <div class="dia"></div><div class="d">9 月</div><div class="t">进入 27Fall 申请季</div>
+      </div>
     </div>
   </div>
 
