@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>留学 Agent · 整体项目规划 2026 Q2–Q3</title>
+<style>
+  :root{
+    --ink:#1a2233; --sub:#5b6678; --line:#e3e8f0; --bg:#f6f8fc;
+    --p1:#7c5cff; --p1b:#efeaff;   /* Mirror 阶段一 */
+    --p2:#2e8bff; --p2b:#e6f1ff;   /* Match 阶段二 */
+    --p3:#1fb6a6; --p3b:#e2f7f4;   /* 申请平台 阶段三 */
+    --pay:#ff7a45; --payb:#ffefe8; /* 收费 */
+    --test:#f2b705; --testb:#fff6da;/* 测试 */
+    --gtm:#e5478b; --gtmb:#fde6f0; /* 推广/申请季 */
+    --gold:#caa64a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+       background:var(--bg);color:var(--ink);padding:32px 28px 48px;}
+  .wrap{max-width:1180px;margin:0 auto;background:#fff;border-radius:18px;
+        box-shadow:0 8px 40px rgba(30,50,90,.08);padding:34px 38px 40px;}
+
+  /* header */
+  .hd{display:flex;justify-content:space-between;align-items:flex-end;
+      border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:26px;}
+  .hd h1{font-size:25px;letter-spacing:.5px}
+  .hd .meta{text-align:right;color:var(--sub);font-size:12.5px;line-height:1.7}
+  .hd .meta b{color:var(--ink)}
+
+  h2.sec{font-size:14px;color:var(--sub);font-weight:700;letter-spacing:1px;
+         margin:30px 0 14px;display:flex;align-items:center;gap:8px}
+  h2.sec::before{content:"";width:4px;height:15px;background:var(--ink);border-radius:2px}
+
+  /* phase architecture */
+  .phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .ph{border-radius:14px;padding:16px 18px;border:1.5px solid}
+  .ph .tag{font-size:11px;font-weight:700;letter-spacing:.5px;opacity:.8}
+  .ph h3{font-size:16px;margin:5px 0 7px}
+  .ph p{font-size:12px;color:var(--sub);line-height:1.6}
+  .ph .when{margin-top:10px;font-size:11.5px;font-weight:700}
+  .ph1{border-color:var(--p1);background:var(--p1b)} .ph1 .tag,.ph1 .when{color:var(--p1)}
+  .ph2{border-color:var(--p2);background:var(--p2b)} .ph2 .tag,.ph2 .when{color:var(--p2)}
+  .ph3{border-color:var(--p3);background:var(--p3b)} .ph3 .tag,.ph3 .when{color:var(--p3)}
+
+  /* gantt */
+  .gantt{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .months{display:flex;background:#fbfcfe;border-bottom:1px solid var(--line)}
+  .mo{padding:9px 0;text-align:center;font-size:12.5px;font-weight:700;
+      border-right:1px dashed var(--line);color:var(--sub)}
+  .mo:last-child{border-right:none}
+
+  .rows{position:relative}
+  /* vertical milestone guide lines overlay */
+  .guides{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .guide{position:absolute;top:0;bottom:0;width:0;border-left:2px dotted var(--gold);opacity:.55}
+
+  .row{position:relative;height:46px;border-bottom:1px solid var(--line);
+       display:flex;align-items:center}
+  .row:last-child{border-bottom:none}
+  .row .lbl{position:absolute;left:14px;font-size:12.5px;font-weight:600;z-index:2;
+            text-shadow:0 0 6px #fff,0 0 6px #fff}
+  .track{position:absolute;left:0;right:0;height:100%}
+  .bar{position:absolute;top:9px;height:28px;border-radius:7px;display:flex;
+       align-items:center;padding:0 10px;font-size:11.5px;color:#fff;font-weight:600;
+       white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.10)}
+  .bar.dash{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 7px,transparent 7px 14px)}
+  .bar .out{position:absolute;left:calc(100% + 8px);color:var(--ink);
+            font-weight:600;text-shadow:0 0 6px #fff}
+  .b-p2{background:var(--p2)} .b-pay{background:var(--pay)} .b-test{background:var(--test);color:#5a4500}
+  .b-p3{background:var(--p3)} .b-gtm{background:var(--gtm)} .b-p1{background:var(--p1)}
+
+  /* milestone diamonds row */
+  .mstones{position:relative;height:54px;margin-top:2px}
+  .ms{position:absolute;transform:translateX(-50%);text-align:center;width:140px}
+  .ms .dia{width:15px;height:15px;background:var(--gold);margin:0 auto 5px;
+           transform:rotate(45deg);box-shadow:0 0 0 4px #fff,0 2px 6px rgba(0,0,0,.2)}
+  .ms .t{font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.35}
+  .ms .d{font-size:10.5px;color:var(--gtm);font-weight:700}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;font-size:11.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+  .dia-mini{width:11px;height:11px;background:var(--gold);transform:rotate(45deg);display:inline-block}
+
+  /* notes / risks */
+  .grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .card h4{font-size:13px;margin-bottom:9px}
+  .card ul{list-style:none;font-size:12px;line-height:1.85;color:#404a5c}
+  .card li{padding-left:16px;position:relative}
+  .card li::before{content:"▸";position:absolute;left:0;color:var(--p2)}
+  .risk li::before{content:"⚠";color:var(--pay)}
+  .risk{border-color:#ffd9c9;background:#fffaf7}
+  .foot{margin-top:22px;font-size:11px;color:#9aa4b4;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hd">
+    <h1>留学 Agent · 整体项目规划</h1>
+    <div class="meta">
+      规划周期：<b>2026 年 6 月 → 9 月</b>（Q2–Q3）<br>
+      用途：内部会议 · 路线对齐 ｜ 制图日期：2026-06-09
+    </div>
+  </div>
+
+  <!-- 三阶段产品架构 -->
+  <h2 class="sec">产品三阶段架构</h2>
+  <div class="phases">
+    <div class="ph ph1">
+      <div class="tag">第一阶段</div>
+      <h3>Mirror 对话</h3>
+      <p>留学规划对话引擎 · 升级 2.0 版（并行推进，需新增实习生承接）</p>
+      <div class="when">本季并行优化 → 7 月底前 2.0</div>
+    </div>
+    <div class="ph ph2">
+      <div class="tag">第二阶段 · 当前主战场</div>
+      <h3>Match 匹配</h3>
+      <p>学校 / 项目智能匹配 + 收费闭环，构成首个可商业化最小闭环</p>
+      <div class="when">6/12 Match 完工 → 6/19 收费</div>
+    </div>
+    <div class="ph ph3">
+      <div class="tag">第三阶段</div>
+      <h3>申请平台</h3>
+      <p>申请流程 / 材料管理平台，承接 27Fall 完整申请季</p>
+      <div class="when">7/10 启动 → 7 月底上线</div>
+    </div>
+  </div>
+
+  <!-- 甘特时间轴 -->
+  <h2 class="sec">时间轴（甘特图）</h2>
+  <div class="gantt">
+    <!-- 月份表头：6月20.0% / 7月27.0% / 8月27.0% / 9月26.0% -->
+    <div class="months">
+      <div class="mo" style="width:20.0%">6 月</div>
+      <div class="mo" style="width:27.0%">7 月</div>
+      <div class="mo" style="width:27.0%">8 月</div>
+      <div class="mo" style="width:26.0%">9 月</div>
+    </div>
+
+    <div class="rows">
+      <!-- 里程碑竖向引导线：6/12=3.5% · 7/31=46.1% · 9/1=73.9% -->
+      <div class="guides">
+        <div class="guide" style="left:3.5%"></div>
+        <div class="guide" style="left:46.1%"></div>
+        <div class="guide" style="left:73.9%"></div>
+      </div>
+
+      <!-- 主线 -->
+      <div class="row">
+        <div class="lbl">② Match 匹配开发</div>
+        <div class="track">
+          <div class="bar b-p2" style="left:0;width:3.5%"><span class="out">本周收尾</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="lbl">收费功能开发</div>
+        <div class="track">
+          <div class="bar b-pay" style="left:6.1%;width:3.5%"><span class="out">6/15–6/19</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="lbl">小规模用户测试</div>
+        <div class="track">
+          <div class="bar b-test" style="left:12.2%;width:15.6%">灰度试用 · 收反馈</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="lbl">③ 申请平台开发</div>
+        <div class="track">
+          <div class="bar b-p3" style="left:27.8%;width:18.3%">第三阶段开发</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="lbl">线上市场推广</div>
+        <div class="track">
+          <div class="bar b-gtm" style="left:47.0%;width:52.1%">投放 · 内容 · 获客</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="lbl">27Fall 申请季</div>
+        <div class="track">
+          <div class="bar b-gtm" style="left:73.9%;width:25.2%;opacity:.78">承接真实申请用户</div>
+        </div>
+      </div>
+      <!-- 并行条件线 -->
+      <div class="row" style="background:#faf8ff">
+        <div class="lbl" style="color:var(--p1)">① Mirror 对话 2.0 <span style="font-weight:500;opacity:.7">（并行 · 需实习生）</span></div>
+        <div class="track">
+          <div class="bar b-p1 dash" style="left:6.1%;width:40.0%">独立人力并行推进</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 里程碑 -->
+  <div class="mstones">
+    <div class="ms" style="left:3.5%">
+      <div class="dia"></div><div class="d">6/12 周五</div><div class="t">Match 完工</div>
+    </div>
+    <div class="ms" style="left:46.1%">
+      <div class="dia"></div><div class="d">7 月底</div><div class="t">完整项目上线</div>
+    </div>
+    <div class="ms" style="left:73.9%">
+      <div class="dia"></div><div class="d">9 月</div><div class="t">进入 27Fall 申请季</div>
+    </div>
+  </div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <span><i style="background:var(--p2)"></i>阶段二 Match</span>
+    <span><i style="background:var(--pay)"></i>收费功能</span>
+    <span><i style="background:var(--test)"></i>用户测试</span>
+    <span><i style="background:var(--p3)"></i>阶段三 申请平台</span>
+    <span><i style="background:var(--p1)"></i>阶段一 Mirror 2.0（并行）</span>
+    <span><i style="background:var(--gtm)"></i>推广 / 申请季</span>
+    <span><i class="dia-mini"></i>关键里程碑</span>
+  </div>
+
+  <!-- 关键节点 + 风险 -->
+  <h2 class="sec">关键节奏 & 依赖风险</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>关键节奏</h4>
+      <ul>
+        <li><b>6/12（本周五）</b>：Match 匹配开发完工</li>
+        <li><b>6/15–6/19</b>：收费功能开发，打通"匹配 → 付费"最小商业闭环</li>
+        <li><b>6/22 起</b>：开发完即启动小规模用户灰度测试，边测边修</li>
+        <li><b>7/10</b>：第三阶段申请平台开发启动</li>
+        <li><b>7 月底</b>：完整项目（三阶段串通）正式上线</li>
+        <li><b>8 月</b>：线上市场推广启动，蓄水获客</li>
+        <li><b>9 月</b>：进入 27Fall 真实申请季，承接付费申请用户</li>
+      </ul>
+    </div>
+    <div class="card risk">
+      <h4>依赖 & 风险（待会上拍板）</h4>
+      <ul>
+        <li><b>人力缺口</b>：Mirror 2.0 并行线成立的前提是<b>新增 1 名实习生</b>；不到位则该线顺延</li>
+        <li><b>上线窗口偏紧</b>：第三阶段 7/10 启动、7 月底上线，仅 ~3 周，需提前锁定范围（MVP 优先）</li>
+        <li><b>测试与开发并行</b>：6 月底用户反馈需有人即时承接，避免阻塞收费迭代</li>
+        <li><b>推广前置</b>：8 月推广须在 9 月申请季前完成蓄水，物料/渠道需 7 月底就绪</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">留学 Agent 内部规划示意图 · 时间轴按日期等比绘制 · 虚线 = 条件性并行任务</div>
+</div>
+</body>
+</html>
